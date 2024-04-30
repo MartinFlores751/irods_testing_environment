@@ -16,17 +16,18 @@ def create_archive(members, filename='foo', extension='tar'):
     # TODO: allow for path to be specified
     # TODO: allow for type of archive to be specified
     # Create a tarfile with the packages
-    tarfile_name = '.'.join([filename, extension])
-    tarfile_path = os.path.join(tempfile.mkdtemp(), tarfile_name)
+    #tarfile_name = '.'.join([filename, extension])
+    #tarfile_path = os.path.join(tempfile.mkdtemp(), tarfile_name)
+    tarfile_file = tempfile.NamedTemporaryFile()
 
-    logging.debug('creating tarfile [{}]'.format(tarfile_path))
+    logging.debug('created tarfile [{}]'.format(tarfile_file.name))
 
-    with tarfile.open(tarfile_path, 'w') as f:
+    with tarfile.open(fileobj=tarfile_file, mode='w') as f:
         for m in members:
             logging.debug('adding member [{0}] to tarfile'.format(m))
             f.add(m)
 
-    return tarfile_path
+    return tarfile_file
 
 
 def extract_archive(path_to_archive, path_to_extraction=None):
@@ -85,12 +86,12 @@ def copy_archive_to_container(container, archive_file_path_on_host, extension='t
     container -- the docker container into which the archive is being copied
     archive_file_path_on_host -- local path to the archive being copied
     """
-    dir_path = path_to_archive_in_container(archive_file_path_on_host, extension)
+    dir_path = path_to_archive_in_container(archive_file_path_on_host.name, extension)
 
     logging.debug('putting archive [{0}] in container [{1}] at [{2}]'.format(
-        archive_file_path_on_host, container.name, dir_path))
+        archive_file_path_on_host.name, container.name, dir_path))
 
-    with open(archive_file_path_on_host, 'rb') as tf:
+    with open(archive_file_path_on_host.name, 'rb') as tf:
         if not container.put_archive('/', tf):
             raise RuntimeError('failed to put archive in container [{}]'.format(container.name))
 
