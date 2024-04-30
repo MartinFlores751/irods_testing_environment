@@ -14,8 +14,15 @@ services:
                 - irods_package_version=${irods_package_version}
         depends_on:
             - catalog
+        cap_add:
+            - SYS_PTRACE
+        security_opt:
+            - seccomp=unconfined
         volumes:
             - shared_volume:/irods_testing_environment_mount_dir
+            - /home/marflo/Documents/iRODS/irods:/irods_source:ro
+            - /home/marflo/Documents/iRODS/irods_client_icommands:/icommands_source:ro
+            - /home/marflo/Documents/iRODS/build-artifacts/ubuntu-20.04/externals:/externals:ro
 
     irods-catalog-consumer:
         build:

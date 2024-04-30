@@ -36,4 +36,20 @@ RUN python3 -m pip install 'unittest-xml-reporting<3.1.0'
 
 RUN mkdir -p /irods_testing_environment_mount_dir && chmod 777 /irods_testing_environment_mount_dir
 
+COPY ["irods-externals-clang13.0.1-0_1.0-0~focal_amd64.deb", "."]
+
+#    apt-get --fix-broken install && \
+RUN apt-get update && \
+    apt-get install -y \
+	vim \
+	libgcc-10-dev \
+	libstdc++-10-dev \
+	libxml2 \
+    && \
+    dpkg -i /irods-externals-clang13.0.1-0_1.0-0~focal_amd64.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
+
+ENV PATH="${PATH}:/opt/irods-externals/clang13.0.1-0/bin"
+
 ENTRYPOINT ["bash", "-c", "until false; do sleep 2147483647d; done"]
