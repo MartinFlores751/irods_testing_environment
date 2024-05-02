@@ -11,7 +11,7 @@ def common_temp_dir(**kwargs):
     import sys
 
     if not hasattr(common_temp_dir, 'tempdir'):
-        if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
+        if <!!!CHECK SOMETHING HERE!!!>:
             logging.debug('Not going to clean up the temporary directory.')
 
             # Remove 'if' and leave 'else' in future versions
