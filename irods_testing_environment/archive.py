@@ -12,7 +12,7 @@ def common_temp_dir(**kwargs):
 
     if not hasattr(common_temp_dir, 'tempdir'):
         if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
-            logging.debug('Not going to clean up the temporary directory')
+            logging.debug('Not going to clean up the temporary directory.')
 
             # Remove 'if' and leave 'else' in future versions
             if sys.version_info < (3, 12):
@@ -25,7 +25,7 @@ def common_temp_dir(**kwargs):
         common_temp_dir.tempdir = tempfile.TemporaryDirectory(**kwargs)
         common_temp_dir.dir_name = common_temp_dir.tempdir.name
     elif kwargs:
-        raise RuntimeError('Cannot reset tempdir after already created!')
+        raise RuntimeError('Cannot reset tempdir after already created.')
     return common_temp_dir.dir_name
 
 def create_archive(members, filename='foo', extension='tar'):
