@@ -26,6 +26,7 @@ def common_temp_dir(**kwargs):
         common_temp_dir.dir_name = common_temp_dir.tempdir.name
     elif kwargs:
         raise RuntimeError('Cannot reset tempdir after already created.')
+
     return common_temp_dir.dir_name
 
 def create_archive(members, filename='foo', extension='tar'):
