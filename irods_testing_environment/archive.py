@@ -10,7 +10,7 @@ from . import execute
 def common_temp_dir(**kwargs):
     import sys
 
-    if 'tempdir' not in common_temp_dir.__dict__:
+    if not hasattr(common_temp_dir, 'tempdir'):
         if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
             logging.debug('Not going to clean up the temporary directory')
 
