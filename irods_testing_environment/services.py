@@ -106,7 +106,7 @@ def clone_repository_to_container(container,
     url = os.path.join(url_base, '.'.join([repo_name, 'git']))
 
     repo_path = os.path.abspath(os.path.join(
-                    destination_directory or tempfile.mkdtemp(),
+                    destination_directory or archive.common_temp_dir(),
                     repo_name))
 
     Repo.clone_from(url=url, to_path=repo_path, branch=branch)

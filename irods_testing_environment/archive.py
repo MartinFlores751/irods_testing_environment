@@ -7,6 +7,27 @@ import tempfile
 # local modules
 from . import execute
 
+def common_temp_dir(**kwargs):
+    import sys
+
+    if 'tempdir' not in common_temp_dir.__dict__:
+        if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
+            logging.debug('Not going to clean up the temporary directory')
+
+            # Remove 'if' and leave 'else' in future versions
+            if sys.version_info < (3, 12):
+                common_temp_dir.tempdir = tempfile.mkdtemp(**kwargs)
+                common_temp_dir.dir_name = common_temp_dir.tempdir
+                return common_temp_dir.dir_name
+            else:
+                kwargs['delete'] = False
+
+        common_temp_dir.tempdir = tempfile.TemporaryDirectory(**kwargs)
+        common_temp_dir.dir_name = common_temp_dir.tempdir.name
+    elif kwargs:
+        raise RuntimeError('Cannot reset tempdir after already created!')
+    return common_temp_dir.dir_name
+
 def create_archive(members, filename='foo', extension='tar'):
     """Create a local archive file with the files in `members` and return a path to the file.
 
@@ -16,8 +37,9 @@ def create_archive(members, filename='foo', extension='tar'):
     # TODO: allow for path to be specified
     # TODO: allow for type of archive to be specified
     # Create a tarfile with the packages
+    temp_dir = common_temp_dir()
     tarfile_name = '.'.join([filename, extension])
-    tarfile_path = os.path.join(tempfile.mkdtemp(), tarfile_name)
+    tarfile_path = os.path.join(temp_dir, tarfile_name)
 
     logging.debug('creating tarfile [{}]'.format(tarfile_path))
 
